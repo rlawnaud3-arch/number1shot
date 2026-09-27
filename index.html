@@ -38,7 +38,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--flag);outline-offse
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-1%,-1%)}100%{transform:translate(3%,1%)}}
 #stage .vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,rgba(0,0,0,0) 45%,rgba(4,10,6,.55) 100%)}
 /* dawn: cool pre-sunrise tint that fades out */
-#stage .dawn{position:absolute;inset:0;background:linear-gradient(180deg,rgba(38,58,84,.55),rgba(24,44,56,.45) 55%,rgba(20,40,40,.35));mix-blend-mode:multiply;opacity:1;will-change:opacity}
+#stage .dawn{position:absolute;inset:0;background:linear-gradient(180deg,rgba(48,70,96,.5),rgba(30,52,64,.4) 55%,rgba(24,46,46,.3));mix-blend-mode:multiply;opacity:1;will-change:opacity}
 /* fog: two drifting layers of soft mist, thick at start, thinning as the sun rises */
 #stage .fog{position:absolute;left:-30%;top:-10%;width:160%;height:120%;opacity:.85;will-change:transform,opacity;background:
   radial-gradient(ellipse 55% 40% at 20% 60%,rgba(226,234,236,.55),rgba(226,234,236,0) 70%),
@@ -49,12 +49,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--flag);outline-offse
   radial-gradient(ellipse 50% 35% at 40% 40%,rgba(226,234,236,.5),rgba(226,234,236,0) 70%),
   radial-gradient(ellipse 65% 40% at 85% 70%,rgba(226,234,236,.45),rgba(226,234,236,0) 70%);
   filter:blur(26px)}
-/* sun: warm glow from upper right that grows as you walk */
-#stage .sun{position:absolute;inset:-20%;opacity:0;will-change:opacity,transform;mix-blend-mode:screen;background:
-  radial-gradient(circle at 78% 18%,rgba(255,236,190,.95) 0%,rgba(255,214,140,.55) 12%,rgba(255,180,90,.22) 30%,rgba(255,160,60,0) 55%)}
-#stage .rays{position:absolute;inset:-20%;opacity:0;will-change:opacity;mix-blend-mode:screen;background:
-  repeating-conic-gradient(from 200deg at 78% 18%,rgba(255,230,170,.14) 0deg 3deg,rgba(255,230,170,0) 3deg 11deg);
-  mask:radial-gradient(circle at 78% 18%,#000 0%,rgba(0,0,0,.6) 35%,transparent 70%);-webkit-mask:radial-gradient(circle at 78% 18%,#000 0%,rgba(0,0,0,.6) 35%,transparent 70%)}
+/* warm: subtle golden wash that grows as the sun rises (no drawn sun) */
+#stage .warm{position:absolute;inset:0;opacity:0;will-change:opacity;mix-blend-mode:soft-light;background:linear-gradient(200deg,rgba(255,196,120,.9) 0%,rgba(255,180,100,.5) 40%,rgba(255,160,80,.15) 100%)}
 @media (prefers-reduced-motion:reduce){#stage .fog,#stage .fog.b{transition:none}}
 .hud{position:fixed;left:0;right:0;top:0;padding-top:calc(10px + env(safe-area-inset-top,0px));z-index:2;pointer-events:none;display:flex;justify-content:space-between;padding:10px 16px;background:linear-gradient(180deg,rgba(6,14,9,.55),rgba(6,14,9,0));font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
 .hud b{color:var(--flag);font-weight:500}
@@ -156,8 +152,7 @@ footer .disp{font-size:64px;color:rgba(244,246,239,.12);margin-top:10px;line-hei
   <div class="dawn" id="dawn"></div>
   <div class="fog" id="fogA"></div>
   <div class="fog b" id="fogB"></div>
-  <div class="rays" id="rays"></div>
-  <div class="sun" id="sun"></div>
+  <div class="warm" id="warm"></div>
   <div class="grain"></div>
 </div>
 <div class="hud" aria-hidden="true"><span>Hole <b>01</b> · Par 4 · 385y</span><span id="yds">385 YDS TO PIN</span></div>
@@ -299,7 +294,7 @@ var PRODUCTS=[
     el.style.transform='translate3d('+drift+'%,'+bob+'%,0) scale('+z+')';
   }
 
-  var dawn=document.getElementById('dawn'),fogA=document.getElementById('fogA'),fogB=document.getElementById('fogB'),sun=document.getElementById('sun'),rays=document.getElementById('rays');
+  var dawn=document.getElementById('dawn'),fogA=document.getElementById('fogA'),fogB=document.getElementById('fogB'),warm=document.getElementById('warm'),imgs=[].slice.call(document.querySelectorAll('#stage img'));
   function atmosphere(p){
     // sunrise curve: dark & foggy until the tee (~0.30), sun fully up by the green (~0.85)
     var rise=ease((p-0.05)/0.80);
@@ -307,8 +302,10 @@ var PRODUCTS=[
     var fog=1-ease((p-0.10)/0.75);
     if(fogA){fogA.style.opacity=0.85*fog;fogA.style.transform='translate3d('+(p*-14)+'%,'+(p*3)+'%,0) scale('+(1+p*0.25)+')';}
     if(fogB){fogB.style.opacity=0.6*fog;fogB.style.transform='translate3d('+(p*10)+'%,'+(p*-2)+'%,0) scale('+(1+p*0.15)+')';}
-    if(sun){sun.style.opacity=Math.min(1,rise*1.1);sun.style.transform='translate3d(0,'+((1-rise)*12)+'%,0) scale('+(0.7+rise*0.5)+')';}
-    if(rays)rays.style.opacity=Math.max(0,rise-0.35)*0.9;
+    if(warm)warm.style.opacity=rise*0.55;
+    // photos themselves: cool/dim at dawn -> bright/warm by the green
+    var f='brightness('+(0.72+rise*0.33)+') saturate('+(0.7+rise*0.4)+') contrast('+(0.95+rise*0.08)+')';
+    for(var i=0;i<imgs.length;i++)imgs[i].style.filter=f;
   }
   function draw(p){
     atmosphere(p);
