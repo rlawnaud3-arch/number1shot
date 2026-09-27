@@ -37,6 +37,25 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--flag);outline-offse
 #stage .grain{position:absolute;inset:-50%;width:200%;height:200%;opacity:.06;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain 1.2s steps(4) infinite}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-1%,-1%)}100%{transform:translate(3%,1%)}}
 #stage .vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,rgba(0,0,0,0) 45%,rgba(4,10,6,.55) 100%)}
+/* dawn: cool pre-sunrise tint that fades out */
+#stage .dawn{position:absolute;inset:0;background:linear-gradient(180deg,rgba(38,58,84,.55),rgba(24,44,56,.45) 55%,rgba(20,40,40,.35));mix-blend-mode:multiply;opacity:1;will-change:opacity}
+/* fog: two drifting layers of soft mist, thick at start, thinning as the sun rises */
+#stage .fog{position:absolute;left:-30%;top:-10%;width:160%;height:120%;opacity:.85;will-change:transform,opacity;background:
+  radial-gradient(ellipse 55% 40% at 20% 60%,rgba(226,234,236,.55),rgba(226,234,236,0) 70%),
+  radial-gradient(ellipse 60% 45% at 70% 45%,rgba(226,234,236,.5),rgba(226,234,236,0) 70%),
+  radial-gradient(ellipse 80% 30% at 50% 85%,rgba(226,234,236,.6),rgba(226,234,236,0) 70%);
+  filter:blur(18px)}
+#stage .fog.b{opacity:.6;background:
+  radial-gradient(ellipse 50% 35% at 40% 40%,rgba(226,234,236,.5),rgba(226,234,236,0) 70%),
+  radial-gradient(ellipse 65% 40% at 85% 70%,rgba(226,234,236,.45),rgba(226,234,236,0) 70%);
+  filter:blur(26px)}
+/* sun: warm glow from upper right that grows as you walk */
+#stage .sun{position:absolute;inset:-20%;opacity:0;will-change:opacity,transform;mix-blend-mode:screen;background:
+  radial-gradient(circle at 78% 18%,rgba(255,236,190,.95) 0%,rgba(255,214,140,.55) 12%,rgba(255,180,90,.22) 30%,rgba(255,160,60,0) 55%)}
+#stage .rays{position:absolute;inset:-20%;opacity:0;will-change:opacity;mix-blend-mode:screen;background:
+  repeating-conic-gradient(from 200deg at 78% 18%,rgba(255,230,170,.14) 0deg 3deg,rgba(255,230,170,0) 3deg 11deg);
+  mask:radial-gradient(circle at 78% 18%,#000 0%,rgba(0,0,0,.6) 35%,transparent 70%);-webkit-mask:radial-gradient(circle at 78% 18%,#000 0%,rgba(0,0,0,.6) 35%,transparent 70%)}
+@media (prefers-reduced-motion:reduce){#stage .fog,#stage .fog.b{transition:none}}
 .hud{position:fixed;left:0;right:0;top:0;padding-top:calc(10px + env(safe-area-inset-top,0px));z-index:2;pointer-events:none;display:flex;justify-content:space-between;padding:10px 16px;background:linear-gradient(180deg,rgba(6,14,9,.55),rgba(6,14,9,0));font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
 .hud b{color:var(--flag);font-weight:500}
 
@@ -134,6 +153,11 @@ footer .disp{font-size:64px;color:rgba(244,246,239,.12);margin-top:10px;line-hei
   <img id="p15" src="img/w15.jpg" alt="" decoding="async">
   <img id="p16" src="img/w16.jpg" alt="" decoding="async">
   <div class="vig"></div>
+  <div class="dawn" id="dawn"></div>
+  <div class="fog" id="fogA"></div>
+  <div class="fog b" id="fogB"></div>
+  <div class="rays" id="rays"></div>
+  <div class="sun" id="sun"></div>
   <div class="grain"></div>
 </div>
 <div class="hud" aria-hidden="true"><span>Hole <b>01</b> · Par 4 · 385y</span><span id="yds">385 YDS TO PIN</span></div>
@@ -275,7 +299,19 @@ var PRODUCTS=[
     el.style.transform='translate3d('+drift+'%,'+bob+'%,0) scale('+z+')';
   }
 
+  var dawn=document.getElementById('dawn'),fogA=document.getElementById('fogA'),fogB=document.getElementById('fogB'),sun=document.getElementById('sun'),rays=document.getElementById('rays');
+  function atmosphere(p){
+    // sunrise curve: dark & foggy until the tee (~0.30), sun fully up by the green (~0.85)
+    var rise=ease((p-0.05)/0.80);
+    if(dawn)dawn.style.opacity=1-rise*0.95;
+    var fog=1-ease((p-0.10)/0.75);
+    if(fogA){fogA.style.opacity=0.85*fog;fogA.style.transform='translate3d('+(p*-14)+'%,'+(p*3)+'%,0) scale('+(1+p*0.25)+')';}
+    if(fogB){fogB.style.opacity=0.6*fog;fogB.style.transform='translate3d('+(p*10)+'%,'+(p*-2)+'%,0) scale('+(1+p*0.15)+')';}
+    if(sun){sun.style.opacity=Math.min(1,rise*1.1);sun.style.transform='translate3d(0,'+((1-rise)*12)+'%,0) scale('+(0.7+rise*0.5)+')';}
+    if(rays)rays.style.opacity=Math.max(0,rise-0.35)*0.9;
+  }
   function draw(p){
+    atmosphere(p);
     for(var i=0;i<16;i++)setImg(i,p);
     if(yds){var d;if(p<0.33)d=385;else if(p<0.45)d=Math.round(lerp(385,95,seg(p,0.33,0.45)));else if(p<0.86)d=Math.round(lerp(95,8,seg(p,0.45,0.86)));else if(p<0.935)d=Math.round(lerp(8,1,seg(p,0.86,0.935)));else if(p<0.965)d=Math.round(lerp(1,0,seg(p,0.935,0.965)));else d=0;
       yds.textContent=d+' YDS TO PIN';}
