@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="넘버원샷 · 골프치는회계사. 골프에서 시작해 브랜드와 산업까지, 공인회계사가 숫자로 뜯어봅니다.">
+<meta property="og:title" content="넘버원샷 · 골프치는회계사">
+<meta property="og:description" content="골프에서 시작해 브랜드와 산업까지, 공인회계사가 숫자로 뜯어봅니다.">
+<meta property="og:image" content="img/w1.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A1810">
+<style>html{color-scheme:dark}body{margin:0;background:#0A1810}img{max-width:100%}[hidden]{display:none!important}</style>
+<!-- ANALYTICS: GA4 측정 ID(G-XXXXXXXX)를 받으면 아래 두 줄의 주석을 풀고 ID를 넣는다 -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXX');</script> -->
+</head>
+<body>
+<title>넘버원샷</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#0A1810;--panel:rgba(6,14,9,.74);--ink:#F4F6EF;--ink-2:#A8BAAC;--line:rgba(244,246,239,.16);
+  --flag:#F0512F;--sand:#E6DCC0;--glow:rgba(240,81,47,.35);color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.disp{font-family:"Big Shoulders Display","Bebas Neue",Impact,sans-serif;font-weight:900;line-height:.9;letter-spacing:.01em;text-transform:uppercase}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--flag);outline-offset:3px}
+
+/* photo stage */
+#stage{position:fixed;inset:0;z-index:0;overflow:hidden;background:#0A1810;pointer-events:none}
+#stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;will-change:transform,opacity;transform-origin:50% 60%}
+#stage img.on{opacity:1}
+#stage .grain{position:absolute;inset:-50%;width:200%;height:200%;opacity:.06;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain 1.2s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-1%,-1%)}100%{transform:translate(3%,1%)}}
+#stage .vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,rgba(0,0,0,0) 45%,rgba(4,10,6,.55) 100%)}
+.hud{position:fixed;left:0;right:0;top:0;padding-top:calc(10px + env(safe-area-inset-top,0px));z-index:2;pointer-events:none;display:flex;justify-content:space-between;padding:10px 16px;background:linear-gradient(180deg,rgba(6,14,9,.55),rgba(6,14,9,0));font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.hud b{color:var(--flag);font-weight:500}
+
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding-inline:20px;padding-block:76px 60vh;display:grid;gap:110vh}
+.panel{background:var(--panel);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);border:1px solid var(--line);padding:22px 20px}
+
+.hero{padding:18px 18px 22px;margin-inline:-4px;background:linear-gradient(180deg,rgba(6,14,9,.70),rgba(6,14,9,.55) 75%,rgba(6,14,9,0));text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--flag)}
+.h1{margin:14px 0 0;font-size:clamp(92px,26vw,150px);color:#fff}
+.h1 .n{color:var(--flag);text-shadow:0 0 40px var(--glow)}
+.h1 .t{display:block;font-size:.32em;letter-spacing:.06em;color:var(--sand);font-weight:800;margin-top:6px}
+.who{margin:22px 0 0;display:grid;gap:4px}
+.who .kr{font-size:22px;font-weight:600}
+.who .en{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#DCE6DE;letter-spacing:.08em}
+.bio{margin:18px 0 0;max-width:32ch;font-size:15.5px;color:#fff}
+.bio b{font-weight:600;color:var(--sand)}
+.scroll{margin-top:26px;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;color:#fff;display:flex;gap:14px;align-items:center}
+.scroll .arr{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:900;font-size:26px;line-height:1;color:var(--flag);animation:cue 1.5s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(6px);opacity:1}}
+
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sec-h .disp{font-size:34px;font-weight:800;margin:0}
+.sec-h .mono{font-size:11px;color:var(--ink-2);letter-spacing:.12em}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px}
+.stat{padding:12px 10px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat .v{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:800;font-size:38px;line-height:1}
+.stat .v i{font-style:normal;font-size:.5em;color:var(--flag)}
+.stat .l{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-top:6px}
+.links{display:grid;gap:10px}
+.lnk{position:relative;display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:16px;background:rgba(18,43,30,.6);border:1px solid var(--line);overflow:hidden;transition:transform .18s ease,border-color .18s}
+.lnk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--flag);transform:scaleY(0);transform-origin:bottom;transition:transform .22s ease}
+.lnk:hover{transform:translateX(4px);border-color:rgba(240,81,47,.5)}.lnk:hover::before{transform:scaleY(1)}
+.lnk .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase}
+.lnk .t{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:800;font-size:30px;line-height:1;text-transform:uppercase;margin-top:2px}
+.lnk .d{font-size:13px;color:var(--ink-2);margin-top:4px}
+.lnk .arrow{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:900;font-size:34px;color:var(--flag);transition:transform .18s}
+.lnk:hover .arrow{transform:translateX(4px)}
+.lnk.soon{opacity:.55}.lnk.soon .arrow{color:var(--ink-2)}.lnk.soon:hover{transform:none;border-color:var(--line)}.lnk.soon:hover::before{transform:scaleY(0)}
+.chips{display:grid;gap:10px}
+.chip{display:grid;gap:8px;padding:14px 16px;border:1px solid var(--line);background:rgba(6,14,9,.6)}
+.chip.main{border-color:rgba(240,81,47,.55);background:rgba(240,81,47,.10)}
+.chip .ct{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:800;font-size:26px;line-height:1;text-transform:uppercase;letter-spacing:.02em}
+.chip .cd{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.chip .bar{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:2px}
+.chip .track{height:3px;background:rgba(244,246,239,.12);border-radius:2px;overflow:hidden}
+.chip .track i{display:block;height:100%;background:var(--flag)}
+.chip .bar span{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--sand);font-variant-numeric:tabular-nums}
+.chips-note{margin:12px 0 0;font-size:12px;color:var(--ink-2)}
+.shelf{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prod{display:grid;grid-template-rows:auto 1fr;background:rgba(6,14,9,.82);border:1px solid var(--line);overflow:hidden;transition:transform .18s,border-color .18s}
+a.prod:hover{transform:translateY(-2px);border-color:rgba(240,81,47,.5)}
+.prod.empty .ph{aspect-ratio:4/3}
+.prod .ph{aspect-ratio:1/1;max-width:100%;background:rgba(255,255,255,.06);display:grid;place-items:center;overflow:hidden;position:relative}
+.prod .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.prod .ph .no{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:900;font-size:44px;color:rgba(244,246,239,.14);text-transform:uppercase}
+.prod .badge{position:absolute;top:8px;left:8px;background:var(--flag);color:#0A1810;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;padding:3px 7px;text-transform:uppercase}
+.prod .in{padding:10px 12px 12px;display:grid;gap:3px}
+.prod .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.prod b{font-weight:600;font-size:14px;line-height:1.35}
+.prod .price{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--sand);margin-top:4px;font-variant-numeric:tabular-nums}
+.prod.empty{border-style:dashed;opacity:.6}
+.shelf-note{margin:14px 0 0;font-size:12.5px;color:var(--ink-2)}
+.rules{border-top:1px solid var(--line)}
+.rule{display:grid;grid-template-columns:52px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.rule .n{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:900;font-size:32px;line-height:1;color:var(--flag)}
+.rule b{display:block;font-weight:600}.rule span{font-size:13.5px;color:var(--ink-2)}
+.contact{margin-top:18px;background:var(--flag);color:#0A1810;padding:18px 16px;display:grid;gap:10px}
+.contact .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.contact .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.contact code{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:500;user-select:all}
+.btn{font:inherit;font-size:13px;font-weight:600;padding:9px 16px;border:1.5px solid #0A1810;background:transparent;color:#0A1810;cursor:pointer;border-radius:0}
+.btn:hover{background:#0A1810;color:var(--ink)}
+.contact .note{font-size:12.5px;margin:0;opacity:.85}
+footer{display:grid;gap:6px;font-size:12.5px;color:var(--ink-2)}
+footer .disp{font-size:64px;color:rgba(244,246,239,.12);margin-top:10px;line-height:1}
+@media (prefers-reduced-motion:reduce){.scroll .arr{animation:none}.lnk,.lnk::before,.lnk .arrow{transition:none}.wrap{gap:24vh}#stage .grain{animation:none}}
+</style>
+
+<div id="stage" aria-hidden="true">
+  <img id="p1" src="img/w1.jpg" alt="" class="on" decoding="async">
+  <img id="p2" src="img/w2.jpg" alt="" decoding="async">
+  <img id="p3" src="img/w3.jpg" alt="" decoding="async">
+  <img id="p4" src="img/w4.jpg" alt="" decoding="async">
+  <img id="p5" src="img/w5.jpg" alt="" decoding="async">
+  <img id="p6" src="img/w6.jpg" alt="" decoding="async">
+  <img id="p7" src="img/w7.jpg" alt="" decoding="async">
+  <img id="p8" src="img/w8.jpg" alt="" decoding="async">
+  <img id="p9" src="img/w9.jpg" alt="" decoding="async">
+  <img id="p10" src="img/w10.jpg" alt="" decoding="async">
+  <img id="p11" src="img/w11.jpg" alt="" decoding="async">
+  <img id="p12" src="img/w12.jpg" alt="" decoding="async">
+  <img id="p13" src="img/w13.jpg" alt="" decoding="async">
+  <img id="p14" src="img/w14.jpg" alt="" decoding="async">
+  <img id="p15" src="img/w15.jpg" alt="" decoding="async">
+  <img id="p16" src="img/w16.jpg" alt="" decoding="async">
+  <div class="vig"></div>
+  <div class="grain"></div>
+</div>
+<div class="hud" aria-hidden="true"><span>Hole <b>01</b> · Par 4 · 385y</span><span id="yds">385 YDS TO PIN</span></div>
+
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">@number1shot_golf</div>
+    <h1 class="h1 disp">N<span class="n">º1</span><br>Shot<span class="t">넘버원샷</span></h1>
+    <div class="who"><div class="kr">골프치는회계사</div><div class="en">GOLF × DATA × CPA</div></div>
+    <p class="bio">골프에서 시작해 브랜드와 산업까지. <b>공인회계사</b>가 원자료를 직접 확인하고 숫자로 뜯어봅니다. 감으로 말하지 않고, 출처를 답니다.</p>
+    <div class="scroll"><span class="arr" aria-hidden="true">↓</span>아래로 스크롤</div>
+  </header>
+
+  <section class="panel">
+    <div class="stats">
+      <div class="stat"><div class="v">9</div><div class="l">Ball flights</div></div>
+      <div class="stat"><div class="v">91</div><div class="l">Course P&amp;L</div></div>
+      <div class="stat"><div class="v">100<i>%</i></div><div class="l">Sourced</div></div>
+    </div>
+    <div class="sec-h"><h2 class="disp">Links</h2><span class="mono">TAP TO OPEN</span></div>
+    <div class="links">
+      <a class="lnk" href="https://www.instagram.com/number1shot_golf" target="_blank" rel="noopener"><div><div class="k">01 · Feed</div><div class="t">Instagram</div><div class="d">인포그래픽 · 릴스 · 시리즈 아카이브</div></div><div class="arrow">→</div></a>
+      <a class="lnk" href="https://blog.naver.com/number1shot" target="_blank" rel="noopener"><div><div class="k">02 · Long form</div><div class="t">Naver Blog</div><div class="d">긴 글 · 수도권 골프장 시리즈 · 데이터 원문</div></div><div class="arrow">→</div></a>
+      <a class="lnk" href="https://youtube.com/@number1shot" target="_blank" rel="noopener"><div><div class="k">03 · Video</div><div class="t">YouTube</div><div class="d">골프 데이터 설명 채널</div></div><div class="arrow">→</div></a>
+      <a class="lnk" href="#contact"><div><div class="k">04 · Work with me</div><div class="t">협업 · 제안</div><div class="d">브랜드 · 미디어 · 강연 문의</div></div><div class="arrow">↓</div></a>
+    </div>
+  </section>
+
+  <section class="panel" id="topics">
+    <div class="sec-h"><h2 class="disp">Topics</h2><span class="mono">3 PILLARS</span></div>
+    <div class="chips">
+      <div class="chip main"><div class="ct">Golf</div><div class="cd">볼 플라이트 9구질 · 골프장 영업이익률 · 투어 상금 · 장비 스펙</div><div class="bar"><div class="track"><i style="width:70%"></i></div><span>70%</span></div></div>
+      <div class="chip"><div class="ct">Brand &amp; Consumer</div><div class="cd">골프 브랜드 소유구조 · 골프웨어 가격 피라미드 · K-뷰티 인디 브랜드 인덱스</div><div class="bar"><div class="track"><i style="width:20%"></i></div><span>20%</span></div></div>
+      <div class="chip"><div class="ct">Economy</div><div class="cd">산업 데이터 · 공시로 읽는 기업 · 숫자 뒤의 구조</div><div class="bar"><div class="track"><i style="width:10%"></i></div><span>10%</span></div></div>
+    </div>
+    <p class="chips-note">막대는 콘텐츠 비중. 무엇을 다루든 원자료와 출처가 먼저입니다.</p>
+  </section>
+
+  <section class="panel" id="shop">
+    <div class="sec-h"><h2 class="disp">Shop</h2><span class="mono" id="shop-count">STOCKING SOON</span></div>
+    <div class="shelf" id="shelf"></div>
+    <p class="shelf-note" id="shelf-note">첫 상품 준비 중. 준비되는 대로 여기에 올라옵니다.</p>
+  </section>
+
+  <section id="contact" class="panel">
+    <div class="sec-h"><h2 class="disp">Work with me</h2><span class="mono">RULES OF PLAY</span></div>
+    <div class="rules">
+      <div class="rule"><div class="n">01</div><div><b>출처 없는 숫자는 싣지 않습니다.</b><span>협업 콘텐츠도 같은 팩트체크를 거칩니다.</span></div></div>
+      <div class="rule"><div class="n">02</div><div><b>광고·협찬은 표시합니다.</b><span>유료 협업은 게시물에 명시합니다.</span></div></div>
+      <div class="rule"><div class="n">03</div><div><b>데이터 인포그래픽 · 브랜드 및 산업 분석 · 강연 · 기고</b><span>이 네 가지를 받습니다.</span></div></div>
+    </div>
+    <div class="contact">
+      <div class="k">Contact</div>
+      <div class="row"><code id="email">rlawnaud3@naver.com</code><button class="btn" id="copy" type="button">주소 복사</button></div>
+      <p class="note">인스타그램 DM도 열려 있습니다. 답변은 보통 2~3일 내에 드립니다.</p>
+    </div>
+    <footer style="margin-top:24px">
+      <div>넘버원샷은 개인 활동이며, 소속 기관의 입장과 무관합니다.</div>
+      <div class="mono">© 2026 NUMBER ONE SHOT</div>
+      <div class="disp" aria-hidden="true">Play the numbers.</div>
+    </footer>
+  </section>
+</main>
+
+<script>
+(function(){
+  var b=document.getElementById('copy'),e=document.getElementById('email');
+  if(b&&e){b.addEventListener('click',function(){
+    var t=e.textContent;
+    function done(){b.textContent='복사됨';setTimeout(function(){b.textContent='주소 복사';},1800);}
+    function fb(){try{var r=document.createRange();r.selectNodeContents(e);var s=getSelection();s.removeAllRanges();s.addRange(r);}catch(x){}}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,fb);}else{fb();}
+  });}
+})();
+
+/* ===== SHOP: 여기만 채우면 진열됩니다 =====
+   각 항목: {name, price, tag, link, img, badge}
+   img: 'img/prod1.jpg'처럼 페이지와 함께 올린 파일. 없으면 '' 로 두면 됨.
+   비어 있으면 자리표시 칸 4개가 보입니다. */
+var PRODUCTS=[
+  // {name:'넘버원샷 볼 플라이트 포스터', price:'₩29,000', tag:'Print', link:'https://', img:'', badge:'NEW'},
+];
+(function(){
+  var el=document.getElementById('shelf'),cnt=document.getElementById('shop-count'),note=document.getElementById('shelf-note');if(!el)return;
+  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  if(!PRODUCTS.length){
+    el.innerHTML=[1,2].map(function(i){return '<div class="prod empty"><div class="ph"><div class="no">0'+i+'</div></div><div class="in"><div class="tag">Coming soon</div><b>진열 예정</b></div></div>';}).join('');
+    return;
+  }
+  el.innerHTML=PRODUCTS.map(function(p){
+    var tag=p.link?'a':'div',href=p.link?' href="'+esc(p.link)+'" target="_blank" rel="noopener"':'';
+    return '<'+tag+' class="prod"'+href+'><div class="ph">'+(p.img?'<img src="'+esc(p.img)+'" alt="'+esc(p.name)+'" loading="lazy">':'<div class="no">Nº1</div>')+(p.badge?'<span class="badge">'+esc(p.badge)+'</span>':'')+'</div><div class="in"><div class="tag">'+esc(p.tag)+'</div><b>'+esc(p.name)+'</b>'+(p.price?'<div class="price">'+esc(p.price)+'</div>':'')+'</div></'+tag+'>';
+  }).join('');
+  cnt.textContent=PRODUCTS.length+' ITEMS';if(note)note.hidden=true;
+})();
+
+/* ===== photo walk: 5 real scenes, ken-burns + crossfade on scroll ===== */
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var P=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16].map(function(i){return document.getElementById('p'+i);});
+  var yds=document.getElementById('yds');
+  var W,H,DPR;
+  function size(){W=innerWidth;H=innerHeight;}
+  function ease(t){return t<=0?0:t>=1?1:t*t*(3-2*t);}
+  function seg(p,a,b){return ease((p-a)/(b-a));}
+  function lerp(a,b,t){return a+(b-a)*t;}
+
+  /* 16 scenes: [fade-in start, fade-in end, fade-out start, fade-out end]
+     1 door · 2 cart path · 3 path curve · 4 arriving tee · 5 tee shot (ball flies 0.33–0.45)
+     6 walking · 7 footprints · 8 ball ahead · 9 150y out · 10 approach · 11 onto fringe
+     12 green · 13 reading putt · 14 putt line · 15 rolling · 16 cup */
+  var S=[
+    [0.000,0.000,0.060,0.095],
+    [0.060,0.095,0.120,0.155],
+    [0.120,0.155,0.180,0.215],
+    [0.180,0.215,0.240,0.275],
+    [0.240,0.275,0.460,0.495],
+    [0.460,0.495,0.520,0.555],
+    [0.520,0.555,0.580,0.615],
+    [0.580,0.615,0.640,0.675],
+    [0.640,0.675,0.700,0.735],
+    [0.700,0.735,0.760,0.795],
+    [0.760,0.795,0.810,0.845],
+    [0.810,0.845,0.860,0.895],
+    [0.860,0.895,0.900,0.935],
+    [0.900,0.935,0.935,0.970],
+    [0.935,0.970,0.965,1.000],
+    [0.965,1.000,1.100,1.200]
+  ];
+  function setImg(i,p){
+    var s=S[i],a;
+    if(p<s[0])a=0;else if(p<s[1])a=seg(p,s[0],s[1]);else if(p<s[2])a=1;else if(p<s[3])a=1-seg(p,s[2],s[3]);else a=0;
+    var el=P[i];el.style.opacity=a;
+    if(a<=0){el.classList.remove('on');return;}
+    el.classList.add('on');
+    // ken burns: walk-in zoom over the scene's life, gentle bob
+    var life=Math.min(1,Math.max(0,(p-s[0])/(s[3]-s[0])));
+    var z=lerp(1.03,1.16,life);var bob=reduce?0:Math.sin(p*70)*0.3;var drift=lerp(-1.0,1.0,life);
+    el.style.transform='translate3d('+drift+'%,'+bob+'%,0) scale('+z+')';
+  }
+
+  function draw(p){
+    for(var i=0;i<16;i++)setImg(i,p);
+    if(yds){var d;if(p<0.33)d=385;else if(p<0.45)d=Math.round(lerp(385,95,seg(p,0.33,0.45)));else if(p<0.86)d=Math.round(lerp(95,8,seg(p,0.45,0.86)));else if(p<0.935)d=Math.round(lerp(8,1,seg(p,0.86,0.935)));else if(p<0.965)d=Math.round(lerp(1,0,seg(p,0.935,0.965)));else d=0;
+      yds.textContent=d+' YDS TO PIN';}
+  }
+  var last=-1,raf=false;
+  function progress(){var max=document.documentElement.scrollHeight-innerHeight;return max>0?Math.min(1,Math.max(0,scrollY/max)):1;}
+  function tick(){raf=false;var p=progress();if(p!==last){last=p;draw(p);}}
+  function req(){if(!raf){raf=true;requestAnimationFrame(tick);}}
+  size();
+  if(reduce){draw(0);}else{tick();addEventListener('scroll',req,{passive:true});}
+  addEventListener('resize',function(){size();last=-1;req();});
+})();
+</script>
+
+</body>
+</html>
